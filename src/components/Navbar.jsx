@@ -25,8 +25,8 @@ export default function Navbar() {
     return (
         <header
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-                    ? "bg-[#0a0a0f]/90 backdrop-blur-md border-b border-white/5 shadow-lg shadow-black/20"
-                    : "bg-transparent"
+                ? "bg-[#0a0a0f]/90 backdrop-blur-md border-b border-white/5 shadow-lg shadow-black/20"
+                : "bg-transparent"
                 }`}
         >
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -37,7 +37,7 @@ export default function Navbar() {
                             <Zap size={16} className="text-white" fill="white" />
                         </div>
                         <span className="text-white font-bold text-lg tracking-tight">
-                            Lumi<span className="text-violet-400">AI</span>
+                            JRI <span className="text-violet-400">AI</span>
                         </span>
                     </Link>
 
@@ -48,8 +48,8 @@ export default function Navbar() {
                                 key={link.label}
                                 to={link.to}
                                 className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 ${isActive(link.to)
-                                        ? "text-violet-300 bg-violet-500/10"
-                                        : "text-white/60 hover:text-white hover:bg-white/5 hover:text-purple-300"
+                                    ? "text-violet-300 bg-violet-500/10"
+                                    : "text-white/60 hover:text-white hover:bg-white/5 hover:text-purple-300"
                                     }`}
                             >
                                 {link.label}
@@ -94,8 +94,8 @@ export default function Navbar() {
                                 to={link.to}
                                 onClick={() => setMenuOpen(false)}
                                 className={`px-3 py-2.5 text-sm rounded-lg transition-all duration-200 ${isActive(link.to)
-                                        ? "text-violet-300 bg-violet-500/10"
-                                        : "text-white/60 hover:text-white hover:bg-white/5 hover:text-purple-300"
+                                    ? "text-violet-300 bg-violet-500/10"
+                                    : "text-white/60 hover:text-white hover:bg-white/5 hover:text-purple-300"
                                     }`}
                             >
                                 {link.label}

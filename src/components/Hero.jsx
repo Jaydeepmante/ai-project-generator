@@ -150,7 +150,7 @@ export default function Hero() {
                         className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-medium mb-8 shadow-lg shadow-violet-500/10"
                     >
                         <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
-                        Introducing LumiAI 2.0 — now with real-time insights
+                        Introducing JRI AI 2.0 — now with real-time insights
                         <ArrowRight size={12} />
                     </motion.div>
 
@@ -183,7 +183,7 @@ export default function Hero() {
                         custom={0.2}
                         className="text-base sm:text-lg lg:text-xl text-white/50 max-w-2xl leading-relaxed mb-10"
                     >
-                        LumiAI automates your repetitive tasks, surfaces intelligent insights,
+                        JRI AI automates your repetitive tasks, surfaces intelligent insights,
                         and integrates with the tools you already love — so your team can
                         focus on what actually matters.
                     </motion.p>
@@ -282,7 +282,7 @@ export default function Hero() {
                                 <div className="w-3 h-3 rounded-full bg-green-500/70" />
                             </div>
                             <div className="flex-1 mx-4 h-6 rounded-md bg-white/5 flex items-center px-3">
-                                <span className="text-xs text-white/20">app.lumiai.io/dashboard</span>
+                                <span className="text-xs text-white/20">app.jriai.io/dashboard</span>
                             </div>
                         </div>
 
