@@ -1,22 +1,26 @@
 import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Zap } from "lucide-react";
 
 const navLinks = [
-    { label: "Features", href: "#features" },
-    { label: "Pricing", href: "#pricing" },
-    { label: "Docs", href: "#docs" },
-    { label: "Blog", href: "#blog" },
+    { label: "Home", to: "/" },
+    { label: "Features", to: "/#features" },
+    { label: "Pricing", to: "/#pricing" },
+    { label: "Dashboard", to: "/dashboard" },
 ];
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const location = useLocation();
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener("scroll", onScroll);
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
+
+    const isActive = (to) => location.pathname === to;
 
     return (
         <header
@@ -28,42 +32,45 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
-                    <a href="/" className="flex items-center gap-2 group">
+                    <Link to="/" className="flex items-center gap-2 group">
                         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/30 group-hover:shadow-violet-500/50 transition-shadow duration-300">
                             <Zap size={16} className="text-white" fill="white" />
                         </div>
                         <span className="text-white font-bold text-lg tracking-tight">
                             Lumi<span className="text-violet-400">AI</span>
                         </span>
-                    </a>
+                    </Link>
 
                     {/* Desktop Nav */}
                     <nav className="hidden md:flex items-center gap-1">
                         {navLinks.map((link) => (
-                            <a
+                            <Link
                                 key={link.label}
-                                href={link.href}
-                                className="px-4 py-2 text-sm text-white/60 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+                                to={link.to}
+                                className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 ${isActive(link.to)
+                                        ? "text-violet-300 bg-violet-500/10"
+                                        : "text-white/60 hover:text-white hover:bg-white/5 hover:text-purple-300"
+                                    }`}
                             >
                                 {link.label}
-                            </a>
+                            </Link>
                         ))}
                     </nav>
 
                     {/* Desktop CTAs */}
                     <div className="hidden md:flex items-center gap-3">
-                        <a
-                            href="#login"
-                            className="px-4 py-2 text-sm text-white/70 hover:text-white transition-colors duration-200"
+                        <Link
+                            to="/login"
+                            className="px-4 py-2 text-sm text-white/70 hover:text-purple-300 transition-colors duration-200"
                         >
                             Log in
-                        </a>
-                        <a
-                            href="#signup"
+                        </Link>
+                        <Link
+                            to="/signup"
                             className="px-4 py-2 text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-200"
                         >
                             Get started free
-                        </a>
+                        </Link>
                     </div>
 
                     {/* Mobile Toggle */}
@@ -82,29 +89,34 @@ export default function Navbar() {
                 <div className="md:hidden bg-[#0a0a0f]/95 backdrop-blur-md border-t border-white/5 px-6 pb-6 pt-3">
                     <nav className="flex flex-col gap-1">
                         {navLinks.map((link) => (
-                            <a
+                            <Link
                                 key={link.label}
-                                href={link.href}
+                                to={link.to}
                                 onClick={() => setMenuOpen(false)}
-                                className="px-3 py-2.5 text-sm text-white/60 hover:text-white rounded-lg hover:bg-white/5 transition-all duration-200"
+                                className={`px-3 py-2.5 text-sm rounded-lg transition-all duration-200 ${isActive(link.to)
+                                        ? "text-violet-300 bg-violet-500/10"
+                                        : "text-white/60 hover:text-white hover:bg-white/5 hover:text-purple-300"
+                                    }`}
                             >
                                 {link.label}
-                            </a>
+                            </Link>
                         ))}
                     </nav>
                     <div className="flex flex-col gap-2 mt-4">
-                        <a
-                            href="#login"
-                            className="px-4 py-2.5 text-sm text-center text-white/70 hover:text-white border border-white/10 rounded-lg transition-colors duration-200"
+                        <Link
+                            to="/login"
+                            onClick={() => setMenuOpen(false)}
+                            className="px-4 py-2.5 text-sm text-center text-white/70 hover:text-purple-300 border border-white/10 rounded-lg transition-colors duration-200"
                         >
                             Log in
-                        </a>
-                        <a
-                            href="#signup"
-                            className="px-4 py-2.5 text-sm font-semibold text-center text-white rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 shadow-lg shadow-violet-500/25"
+                        </Link>
+                        <Link
+                            to="/signup"
+                            onClick={() => setMenuOpen(false)}
+                            className="px-4 py-2.5 text-sm font-semibold text-center text-white rounded-lg bg-gradient-to-r from-violet-600 to-indigo-600 shadow-lg shadow-violet-500/25 hover:from-violet-500 hover:to-indigo-500 transition-all duration-200"
                         >
                             Get started free
-                        </a>
+                        </Link>
                     </div>
                 </div>
             )}
