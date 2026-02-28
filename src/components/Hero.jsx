@@ -1,29 +1,113 @@
+/**
+ * Hero.jsx — with Framer Motion parallax, stagger, and floating orbs.
+ * Scroll down: headline scales up slightly, bg blobs move at different rates.
+ */
+import { useRef } from "react";
 import { ArrowRight, PlayCircle, Star } from "lucide-react";
-import { motion } from "framer-motion";
+import {
+    motion,
+    useScroll,
+    useTransform,
+    useSpring,
+} from "framer-motion";
 
+/* ─── Shared variants ─────────────────────────────────────── */
 const fadeUp = {
-    hidden: { opacity: 0, y: 24 },
+    hidden: { opacity: 0, y: 28 },
     visible: (delay = 0) => ({
         opacity: 1,
         y: 0,
-        transition: { duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] },
+        transition: { duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] },
     }),
 };
 
+const staggerContainer = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
+};
+
+/* ─── Static data ─────────────────────────────────────────── */
 const stats = [
     { value: "50K+", label: "active users" },
     { value: "99.9%", label: "uptime SLA" },
     { value: "4.9★", label: "avg rating" },
 ];
 
-export default function Hero() {
+/* ─── Floating particle blob ──────────────────────────────── */
+function FloatingOrb({ className, delay = 0, duration = 8 }) {
     return (
-        <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#0a0a0f] px-6 pt-24 pb-16">
-            {/* Background glow blobs */}
+        <motion.div
+            className={className}
+            animate={{
+                y: [0, -22, 0],
+                scale: [1, 1.06, 1],
+                opacity: [0.18, 0.28, 0.18],
+            }}
+            transition={{
+                duration,
+                delay,
+                repeat: Infinity,
+                ease: "easeInOut",
+            }}
+        />
+    );
+}
+
+/* ─── Hero ────────────────────────────────────────────────── */
+export default function Hero() {
+    const ref = useRef(null);
+
+    /* Scroll progress relative to the hero section */
+    const { scrollYProgress } = useScroll({
+        target: ref,
+        offset: ["start start", "end start"],
+    });
+
+    /* Smooth spring wrapping scroll for buttery parallax */
+    const smoothProgress = useSpring(scrollYProgress, { stiffness: 60, damping: 20 });
+
+    /* Parallax transforms */
+    const blobY1 = useTransform(smoothProgress, [0, 1], ["0%", "-35%"]);
+    const blobY2 = useTransform(smoothProgress, [0, 1], ["0%", "-18%"]);
+    const headlineScale = useTransform(smoothProgress, [0, 0.35], [1, 1.07]);
+    const headlineY = useTransform(smoothProgress, [0, 0.5], [0, -30]);
+    const contentOpacity = useTransform(smoothProgress, [0, 0.55], [1, 0]);
+
+    return (
+        <section
+            ref={ref}
+            className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#0a0a0f] px-6 pt-24 pb-16"
+        >
+            {/* ── Parallax background blobs ─────────────────── */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-                <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full bg-violet-700/20 blur-[120px]" />
-                <div className="absolute top-1/2 -left-40 w-[500px] h-[500px] rounded-full bg-indigo-600/15 blur-[100px]" />
-                <div className="absolute top-1/2 -right-40 w-[500px] h-[500px] rounded-full bg-fuchsia-600/10 blur-[100px]" />
+                {/* Primary glow — moves slowest */}
+                <motion.div
+                    style={{ y: blobY1 }}
+                    className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full bg-violet-700/20 blur-[120px]"
+                />
+                {/* Side blobs — move a bit faster */}
+                <motion.div
+                    style={{ y: blobY2 }}
+                    className="absolute top-1/2 -left-40 w-[500px] h-[500px] rounded-full bg-indigo-600/15 blur-[100px]"
+                />
+                <motion.div
+                    style={{ y: blobY2 }}
+                    className="absolute top-1/2 -right-40 w-[500px] h-[500px] rounded-full bg-fuchsia-600/10 blur-[100px]"
+                />
+
+                {/* Floating animated orbs (independent of scroll) */}
+                <FloatingOrb
+                    className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full bg-purple-600/10 blur-[80px]"
+                    delay={0} duration={9}
+                />
+                <FloatingOrb
+                    className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-indigo-500/8 blur-[80px]"
+                    delay={3} duration={11}
+                />
+                <FloatingOrb
+                    className="absolute top-2/3 left-1/3 w-48 h-48 rounded-full bg-fuchsia-500/8 blur-[70px]"
+                    delay={1.5} duration={7}
+                />
             </div>
 
             {/* Grid pattern overlay */}
@@ -37,128 +121,153 @@ export default function Hero() {
                 aria-hidden
             />
 
-            <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center text-center">
-                {/* Pill badge */}
+            {/* Scanline shimmer overlay */}
+            <motion.div
+                className="pointer-events-none absolute inset-0"
+                style={{
+                    background:
+                        "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.012) 2px, rgba(255,255,255,0.012) 4px)",
+                }}
+                aria-hidden
+            />
+
+            {/* ── Main content ──────────────────────────────── */}
+            <motion.div
+                style={{ opacity: contentOpacity }}
+                className="relative z-10 max-w-4xl mx-auto flex flex-col items-center text-center"
+            >
+                {/* Stagger container for all children */}
                 <motion.div
-                    variants={fadeUp}
+                    variants={staggerContainer}
                     initial="hidden"
                     animate="visible"
-                    custom={0}
-                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-medium mb-8 shadow-lg shadow-violet-500/10"
+                    className="flex flex-col items-center"
                 >
-                    <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
-                    Introducing LumiAI 2.0 — now with real-time insights
-                    <ArrowRight size={12} />
-                </motion.div>
-
-                {/* Headline */}
-                <motion.h1
-                    variants={fadeUp}
-                    initial="hidden"
-                    animate="visible"
-                    custom={0.1}
-                    className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.08] mb-6"
-                >
-                    Build faster with{" "}
-                    <span className="relative">
-                        <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400 bg-clip-text text-transparent">
-                            AI-powered
-                        </span>
-                    </span>{" "}
-                    workflows
-                </motion.h1>
-
-                {/* Sub-headline */}
-                <motion.p
-                    variants={fadeUp}
-                    initial="hidden"
-                    animate="visible"
-                    custom={0.2}
-                    className="text-base sm:text-lg lg:text-xl text-white/50 max-w-2xl leading-relaxed mb-10"
-                >
-                    LumiAI automates your repetitive tasks, surfaces intelligent insights,
-                    and integrates with the tools you already love — so your team can
-                    focus on what actually matters.
-                </motion.p>
-
-                {/* CTA buttons */}
-                <motion.div
-                    variants={fadeUp}
-                    initial="hidden"
-                    animate="visible"
-                    custom={0.3}
-                    className="flex flex-col sm:flex-row items-center gap-4 mb-16"
-                >
-                    <a
-                        href="#signup"
-                        className="group flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 shadow-xl shadow-violet-500/30 hover:shadow-violet-500/50 transition-all duration-300"
+                    {/* Pill badge */}
+                    <motion.div
+                        variants={fadeUp}
+                        custom={0}
+                        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-medium mb-8 shadow-lg shadow-violet-500/10"
                     >
-                        Start for free
-                        <ArrowRight
-                            size={16}
-                            className="group-hover:translate-x-1 transition-transform duration-200"
-                        />
-                    </a>
-                    <a
-                        href="#demo"
-                        className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white/70 hover:text-white border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all duration-200"
+                        <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+                        Introducing LumiAI 2.0 — now with real-time insights
+                        <ArrowRight size={12} />
+                    </motion.div>
+
+                    {/* Headline — also has parallax scale on scroll */}
+                    <motion.h1
+                        variants={fadeUp}
+                        custom={0.1}
+                        style={{ scale: headlineScale, y: headlineY }}
+                        className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.08] mb-6 origin-center"
                     >
-                        <PlayCircle size={18} className="text-violet-400" />
-                        Watch demo
-                    </a>
+                        Build faster with{" "}
+                        <span className="relative">
+                            <motion.span
+                                className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400 bg-clip-text text-transparent"
+                                animate={{
+                                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                                }}
+                                transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                                style={{ backgroundSize: "200% 200%" }}
+                            >
+                                AI-powered
+                            </motion.span>
+                        </span>{" "}
+                        workflows
+                    </motion.h1>
+
+                    {/* Sub-headline */}
+                    <motion.p
+                        variants={fadeUp}
+                        custom={0.2}
+                        className="text-base sm:text-lg lg:text-xl text-white/50 max-w-2xl leading-relaxed mb-10"
+                    >
+                        LumiAI automates your repetitive tasks, surfaces intelligent insights,
+                        and integrates with the tools you already love — so your team can
+                        focus on what actually matters.
+                    </motion.p>
+
+                    {/* CTA buttons */}
+                    <motion.div
+                        variants={fadeUp}
+                        custom={0.3}
+                        className="flex flex-col sm:flex-row items-center gap-4 mb-16"
+                    >
+                        <motion.a
+                            href="#signup"
+                            whileHover={{ scale: 1.04, boxShadow: "0 0 32px rgba(139,92,246,0.55)" }}
+                            whileTap={{ scale: 0.97 }}
+                            className="group flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-violet-600 to-indigo-600 shadow-xl shadow-violet-500/30 transition-colors duration-300"
+                        >
+                            Start for free
+                            <ArrowRight
+                                size={16}
+                                className="group-hover:translate-x-1 transition-transform duration-200"
+                            />
+                        </motion.a>
+                        <motion.a
+                            href="#demo"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                            className="flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white/70 hover:text-white border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all duration-200"
+                        >
+                            <PlayCircle size={18} className="text-violet-400" />
+                            Watch demo
+                        </motion.a>
+                    </motion.div>
+
+                    {/* Social proof */}
+                    <motion.div
+                        variants={fadeUp}
+                        custom={0.4}
+                        className="flex flex-wrap justify-center items-center gap-6 mb-16"
+                    >
+                        <div className="flex items-center gap-3">
+                            <div className="flex -space-x-2.5">
+                                {["bg-violet-500", "bg-indigo-500", "bg-fuchsia-500", "bg-blue-500", "bg-emerald-500"].map(
+                                    (color, i) => (
+                                        <div
+                                            key={i}
+                                            className={`w-8 h-8 rounded-full ${color} border-2 border-[#0a0a0f] flex items-center justify-center text-white text-xs font-bold`}
+                                        >
+                                            {["J", "A", "M", "S", "K"][i]}
+                                        </div>
+                                    )
+                                )}
+                            </div>
+                            <div className="text-left">
+                                <div className="flex items-center gap-1">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star key={i} size={12} fill="#f59e0b" className="text-amber-400" />
+                                    ))}
+                                </div>
+                                <p className="text-xs text-white/40 mt-0.5">Loved by 50,000+ teams</p>
+                            </div>
+                        </div>
+
+                        <div className="w-px h-8 bg-white/10 hidden sm:block" />
+
+                        <div className="flex items-center gap-6">
+                            {stats.map(({ value, label }) => (
+                                <div key={label} className="text-center">
+                                    <p className="text-lg font-bold text-white">{value}</p>
+                                    <p className="text-xs text-white/40">{label}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
                 </motion.div>
 
-                {/* Social proof */}
-                <motion.div
-                    variants={fadeUp}
-                    initial="hidden"
-                    animate="visible"
-                    custom={0.4}
-                    className="flex flex-wrap justify-center items-center gap-6 mb-16"
-                >
-                    {/* Avatars */}
-                    <div className="flex items-center gap-3">
-                        <div className="flex -space-x-2.5">
-                            {["bg-violet-500", "bg-indigo-500", "bg-fuchsia-500", "bg-blue-500", "bg-emerald-500"].map(
-                                (color, i) => (
-                                    <div
-                                        key={i}
-                                        className={`w-8 h-8 rounded-full ${color} border-2 border-[#0a0a0f] flex items-center justify-center text-white text-xs font-bold`}
-                                    >
-                                        {["J", "A", "M", "S", "K"][i]}
-                                    </div>
-                                )
-                            )}
-                        </div>
-                        <div className="text-left">
-                            <div className="flex items-center gap-1">
-                                {[...Array(5)].map((_, i) => (
-                                    <Star key={i} size={12} fill="#f59e0b" className="text-amber-400" />
-                                ))}
-                            </div>
-                            <p className="text-xs text-white/40 mt-0.5">Loved by 50,000+ teams</p>
-                        </div>
-                    </div>
-
-                    <div className="w-px h-8 bg-white/10 hidden sm:block" />
-
-                    {/* Stats */}
-                    <div className="flex items-center gap-6">
-                        {stats.map(({ value, label }) => (
-                            <div key={label} className="text-center">
-                                <p className="text-lg font-bold text-white">{value}</p>
-                                <p className="text-xs text-white/40">{label}</p>
-                            </div>
-                        ))}
-                    </div>
-                </motion.div>
-
-                {/* Hero screenshot / dashboard mockup */}
+                {/* ── Dashboard mockup card — 3D tilt on hover ── */}
                 <motion.div
                     variants={fadeUp}
                     initial="hidden"
                     animate="visible"
                     custom={0.5}
+                    whileHover={{ rotateX: -3, rotateY: 4, scale: 1.015 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 25 }}
+                    style={{ perspective: 1000, transformStyle: "preserve-3d" }}
                     className="relative w-full max-w-5xl"
                 >
                     {/* Glow behind card */}
@@ -191,12 +300,11 @@ export default function Hero() {
 
                             {/* Main content */}
                             <div className="col-span-10 p-5 flex flex-col gap-4">
-                                {/* Top row */}
                                 <div className="flex gap-3">
                                     {[
-                                        { label: "Total Revenue", w: "col-span-4", h: "h-16", color: "from-violet-500/20 to-indigo-500/10" },
-                                        { label: "Active Users", w: "col-span-4", h: "h-16", color: "from-indigo-500/20 to-fuchsia-500/10" },
-                                        { label: "Conversion", w: "col-span-4", h: "h-16", color: "from-fuchsia-500/20 to-violet-500/10" },
+                                        { label: "Total Revenue", color: "from-violet-500/20 to-indigo-500/10" },
+                                        { label: "Active Users", color: "from-indigo-500/20 to-fuchsia-500/10" },
+                                        { label: "Conversion", color: "from-fuchsia-500/20 to-violet-500/10" },
                                     ].map(({ label, color }) => (
                                         <div
                                             key={label}
@@ -208,16 +316,19 @@ export default function Hero() {
                                     ))}
                                 </div>
 
-                                {/* Chart row */}
                                 <div className="flex gap-3 flex-1">
                                     <div className="flex-[2] rounded-xl border border-white/5 bg-white/[0.02] p-3 flex flex-col gap-2">
                                         <div className="w-20 h-2 rounded bg-white/15" />
                                         <div className="flex-1 flex items-end gap-1">
                                             {[40, 65, 45, 80, 55, 90, 70, 85, 60, 95, 75, 88].map((h, i) => (
-                                                <div
+                                                <motion.div
                                                     key={i}
                                                     className="flex-1 rounded-sm bg-gradient-to-t from-violet-500/60 to-violet-500/20"
-                                                    style={{ height: `${h}%` }}
+                                                    initial={{ scaleY: 0, originY: 1 }}
+                                                    whileInView={{ scaleY: 1 }}
+                                                    viewport={{ once: true }}
+                                                    transition={{ duration: 0.5, delay: 0.6 + i * 0.04, ease: "easeOut" }}
+                                                    style={{ height: `${h}%`, transformOrigin: "bottom" }}
                                                 />
                                             ))}
                                         </div>
@@ -244,7 +355,7 @@ export default function Hero() {
                         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-[#111118] to-transparent pointer-events-none" />
                     </div>
                 </motion.div>
-            </div>
+            </motion.div>
         </section>
     );
 }
