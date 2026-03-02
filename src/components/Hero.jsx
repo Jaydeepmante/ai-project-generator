@@ -5,6 +5,7 @@
  */
 import { motion } from "framer-motion";
 import { Sparkles, Zap } from "lucide-react";
+import FloatingOrb from "./FloatingOrb";
 
 const fadeUp = {
     hidden: { opacity: 0, y: 28 },
@@ -24,7 +25,10 @@ export default function Hero() {
     return (
         <section className="relative min-h-[75vh] flex flex-col items-center justify-center overflow-hidden bg-[#0a0a0f] px-6 pt-28 pb-0">
 
-            {/* ── Background glows ─────────────────────────────── */}
+            {/* ── R3F Floating AI orb — absolute behind content, parallax on scroll ── */}
+            <FloatingOrb />
+
+            {/* ── CSS background glows ─────────────────────────────── */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
                 <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-full bg-violet-700/20 blur-[130px]" />
                 <div className="absolute top-1/2 -left-40 w-[450px] h-[450px] rounded-full bg-indigo-600/12 blur-[100px]" />
