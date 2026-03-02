@@ -1,9 +1,10 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import ProjectDetail from "./pages/ProjectDetail";
 
 /* Page transition variants — subtle slide + fade */
 const pageVariants = {
@@ -21,6 +22,22 @@ const pageVariants = {
     transition: { duration: 0.3, ease: [0.55, 0, 1, 0.45] },
   },
 };
+
+/* Auth wrapper component */
+function RequireAuth({ children }) {
+  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+  const location = useLocation();
+
+  if (!isAuthenticated) {
+    // Redirect them to the /login page, but save the current location they were
+    // trying to go to when they were redirected. This allows us to send them
+    // along to that page after they login, which is a nicer user experience
+    // than dropping them off on the home page.
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return children;
+}
 
 /* Inner router wrapper — needed so useLocation works inside BrowserRouter */
 function AnimatedRoutes() {
@@ -40,7 +57,19 @@ function AnimatedRoutes() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+
+          {/* Protected Dashboard Routes */}
+          <Route
+            path="/dashboard/*"
+            element={
+              <RequireAuth>
+                <Routes>
+                  <Route index element={<Dashboard />} />
+                  <Route path="projects/:id" element={<ProjectDetail />} />
+                </Routes>
+              </RequireAuth>
+            }
+          />
         </Routes>
       </motion.div>
     </AnimatePresence>

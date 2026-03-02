@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Zap, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import Navbar from "../components/Navbar";
 
@@ -8,9 +8,20 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const navigate = useNavigate();
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Auth coming soon
+
+        // Simple form validation
+        if (!email || !password) {
+            alert("Please enter both email and password.");
+            return;
+        }
+
+        // Fake auth: set localStorage and redirect
+        localStorage.setItem("isAuthenticated", "true");
+        navigate("/dashboard");
     };
 
     return (
@@ -62,7 +73,7 @@ export default function Login() {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="you@example.com"
-                                        className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-white/20 focus:outline-none focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/20 transition-all duration-200"
+                                        className="w-full h-11 pl-10 pr-4 rounded-xl bg-violet-900/10 border border-violet-500/20 text-white text-sm placeholder-violet-300/30 focus:outline-none focus:border-violet-500/70 focus:ring-2 focus:ring-violet-500/30 transition-all duration-200"
                                     />
                                 </div>
                             </div>
@@ -80,7 +91,7 @@ export default function Login() {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         placeholder="••••••••"
-                                        className="w-full h-11 pl-10 pr-11 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-white/20 focus:outline-none focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/20 transition-all duration-200"
+                                        className="w-full h-11 pl-10 pr-11 rounded-xl bg-violet-900/10 border border-violet-500/20 text-white text-sm placeholder-violet-300/30 focus:outline-none focus:border-violet-500/70 focus:ring-2 focus:ring-violet-500/30 transition-all duration-200"
                                     />
                                     <button
                                         type="button"
@@ -92,25 +103,21 @@ export default function Login() {
                                 </div>
                             </div>
 
-                            {/* Coming soon notice */}
-                            <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg bg-violet-500/8 border border-violet-500/20 text-violet-300/70 text-xs">
-                                <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse flex-shrink-0" />
-                                Authentication & saved projects coming soon…
-                            </div>
+
 
                             <button
                                 type="submit"
                                 className="group flex items-center justify-center gap-2 h-11 rounded-xl font-semibold text-white text-sm bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-300 mt-1"
                             >
-                                Sign in
+                                Log In
                                 <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform duration-200" />
                             </button>
                         </form>
 
-                        <p className="text-center text-xs text-white/30 mt-6">
+                        <p className="text-center text-xs text-white/40 mt-6">
                             Don't have an account?{" "}
-                            <Link to="/signup" className="text-violet-400 hover:text-violet-300 transition-colors font-medium">
-                                Create one free
+                            <Link to="/signup" className="text-violet-400 hover:text-violet-300 transition-colors font-semibold">
+                                Signup
                             </Link>
                         </p>
                     </div>
