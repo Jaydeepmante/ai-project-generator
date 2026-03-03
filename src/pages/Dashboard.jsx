@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 import { LayoutDashboard, Sparkles, FolderOpen, Settings, LogOut, Zap, Clock, ArrowRight, Eye, Edit, Download, Trash2, Plus } from "lucide-react";
 import Navbar from "../components/Navbar";
+import { auth } from "../firebase";
+import { signOut } from "firebase/auth";
 
 const sidebarLinks = [
     { icon: LayoutDashboard, label: "Overview", active: true },
@@ -24,6 +26,15 @@ const statCards = [
 
 export default function Dashboard() {
     const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+            navigate("/login");
+        } catch (error) {
+            console.error("Logout error:", error);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-[#0a0a0f] flex flex-col">
@@ -65,10 +76,7 @@ export default function Dashboard() {
 
                     <div className="mt-auto">
                         <button
-                            onClick={() => {
-                                localStorage.removeItem("isAuthenticated");
-                                navigate("/login");
-                            }}
+                            onClick={handleLogout}
                             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/30 hover:text-red-400 hover:bg-red-500/5 transition-all duration-200 w-full"
                         >
                             <LogOut size={16} />
@@ -95,10 +103,7 @@ export default function Dashboard() {
                                     New Project
                                 </Link>
                                 <button
-                                    onClick={() => {
-                                        localStorage.removeItem("isAuthenticated");
-                                        navigate("/login");
-                                    }}
+                                    onClick={handleLogout}
                                     className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-red-400 bg-red-400/10 hover:bg-red-400/20 border border-red-500/20 transition-all duration-200"
                                 >
                                     <LogOut size={16} />

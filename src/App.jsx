@@ -23,16 +23,33 @@ const pageVariants = {
   },
 };
 
+import { auth } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { useState, useEffect } from "react";
+
 /* Auth wrapper component */
 function RequireAuth({ children }) {
-  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
 
-  if (!isAuthenticated) {
-    // Redirect them to the /login page, but save the current location they were
-    // trying to go to when they were redirected. This allows us to send them
-    // along to that page after they login, which is a nicer user experience
-    // than dropping them off on the home page.
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center text-white">
+        <div className="w-8 h-8 border-4 border-violet-500/30 border-t-violet-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

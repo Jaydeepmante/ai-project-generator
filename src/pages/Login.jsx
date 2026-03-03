@@ -1,27 +1,47 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Zap, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { Zap, Mail, Lock, ArrowRight, Eye, EyeOff, AlertCircle } from "lucide-react";
 import Navbar from "../components/Navbar";
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login() {
     const [showPass, setShowPass] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setError("");
 
-        // Simple form validation
         if (!email || !password) {
-            alert("Please enter both email and password.");
+            setError("Please enter both email and password.");
             return;
         }
 
-        // Fake auth: set localStorage and redirect
-        localStorage.setItem("isAuthenticated", "true");
-        navigate("/dashboard");
+        setLoading(true);
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            navigate("/dashboard");
+        } catch (err) {
+            console.error("Login error:", err);
+            // Translate common Firebase errors
+            if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password" || err.code === "auth/invalid-credential") {
+                setError("Invalid email or password.");
+            } else if (err.code === "auth/invalid-email") {
+                setError("Invalid email address.");
+            } else if (err.code === "auth/too-many-requests") {
+                setError("Too many failed attempts. Please try again later.");
+            } else {
+                setError("Failed to log in. Please check your credentials.");
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -73,6 +93,7 @@ export default function Login() {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="you@example.com"
+                                        required
                                         className="w-full h-11 pl-10 pr-4 rounded-xl bg-violet-900/10 border border-violet-500/20 text-white text-sm placeholder-violet-300/30 focus:outline-none focus:border-violet-500/70 focus:ring-2 focus:ring-violet-500/30 transition-all duration-200"
                                     />
                                 </div>
@@ -91,6 +112,7 @@ export default function Login() {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         placeholder="••••••••"
+                                        required
                                         className="w-full h-11 pl-10 pr-11 rounded-xl bg-violet-900/10 border border-violet-500/20 text-white text-sm placeholder-violet-300/30 focus:outline-none focus:border-violet-500/70 focus:ring-2 focus:ring-violet-500/30 transition-all duration-200"
                                     />
                                     <button
@@ -103,14 +125,21 @@ export default function Login() {
                                 </div>
                             </div>
 
-
+                            {/* Error Message */}
+                            {error && (
+                                <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
+                                    <AlertCircle size={14} className="shrink-0" />
+                                    {error}
+                                </div>
+                            )}
 
                             <button
                                 type="submit"
-                                className="group flex items-center justify-center gap-2 h-11 rounded-xl font-semibold text-white text-sm bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-300 mt-1"
+                                disabled={loading}
+                                className={`group flex items-center justify-center gap-2 h-11 rounded-xl font-semibold text-white text-sm bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 transition-all duration-300 mt-1 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
                             >
-                                Log In
-                                <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+                                {loading ? "Logging In..." : "Log In"}
+                                {!loading && <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform duration-200" />}
                             </button>
                         </form>
 

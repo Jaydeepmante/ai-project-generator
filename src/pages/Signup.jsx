@@ -1,17 +1,52 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Zap, Mail, Lock, User, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Zap, Mail, Lock, ArrowRight, Eye, EyeOff, AlertCircle } from "lucide-react";
 import Navbar from "../components/Navbar";
+import { auth } from "../firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function Signup() {
     const [showPass, setShowPass] = useState(false);
-    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Auth coming soon
+        setError("");
+
+        if (!email || !password) {
+            setError("Please enter both email and password.");
+            return;
+        }
+
+        if (password.length < 6) {
+            setError("Password must be at least 6 characters.");
+            return;
+        }
+
+        setLoading(true);
+        try {
+            await createUserWithEmailAndPassword(auth, email, password);
+            navigate("/dashboard");
+        } catch (err) {
+            console.error("Signup error:", err);
+            // Translate common Firebase errors
+            if (err.code === "auth/email-already-in-use") {
+                setError("This email is already in use.");
+            } else if (err.code === "auth/weak-password") {
+                setError("Password is too weak.");
+            } else if (err.code === "auth/invalid-email") {
+                setError("Invalid email address.");
+            } else {
+                setError("Failed to create account. Please try again.");
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -47,27 +82,12 @@ export default function Signup() {
 
                     <div className="text-center mb-8">
                         <h1 className="text-3xl font-extrabold text-white mb-2">Create New Account</h1>
-                        <p className="text-white/40 text-sm">Start building with AI for free — no credit card required.</p>
+                        <p className="text-white/40 text-sm">Start building with AI — easy and secure.</p>
                     </div>
 
                     {/* Card */}
                     <div className="bg-gray-900/80 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-8 shadow-2xl shadow-violet-950/50">
                         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                            {/* Name */}
-                            <div className="flex flex-col gap-1.5">
-                                <label className="text-xs font-medium text-white/50 uppercase tracking-wide">Full Name</label>
-                                <div className="relative">
-                                    <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30" />
-                                    <input
-                                        type="text"
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
-                                        placeholder="Jane Smith"
-                                        className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-white/20 focus:outline-none focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/20 transition-all duration-200"
-                                    />
-                                </div>
-                            </div>
-
                             {/* Email */}
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-xs font-medium text-white/50 uppercase tracking-wide">Email</label>
@@ -78,6 +98,7 @@ export default function Signup() {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="you@example.com"
+                                        required
                                         className="w-full h-11 pl-10 pr-4 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-white/20 focus:outline-none focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/20 transition-all duration-200"
                                     />
                                 </div>
@@ -92,7 +113,8 @@ export default function Signup() {
                                         type={showPass ? "text" : "password"}
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="Min. 8 characters"
+                                        placeholder="Min. 6 characters"
+                                        required
                                         className="w-full h-11 pl-10 pr-11 rounded-xl bg-white/5 border border-white/10 text-white text-sm placeholder-white/20 focus:outline-none focus:border-violet-500/60 focus:ring-2 focus:ring-violet-500/20 transition-all duration-200"
                                     />
                                     <button
@@ -105,18 +127,21 @@ export default function Signup() {
                                 </div>
                             </div>
 
-                            {/* Coming soon notice */}
-                            <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg bg-fuchsia-500/8 border border-fuchsia-500/20 text-fuchsia-300/70 text-xs">
-                                <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 animate-pulse flex-shrink-0" />
-                                Authentication & saved projects coming soon…
-                            </div>
+                            {/* Error Message */}
+                            {error && (
+                                <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
+                                    <AlertCircle size={14} className="shrink-0" />
+                                    {error}
+                                </div>
+                            )}
 
                             <button
                                 type="submit"
-                                className="group flex items-center justify-center gap-2 h-11 rounded-xl font-semibold text-white text-sm bg-gradient-to-r from-fuchsia-600 to-violet-600 hover:from-fuchsia-500 hover:to-violet-500 shadow-lg shadow-fuchsia-500/25 hover:shadow-fuchsia-500/40 transition-all duration-300 mt-1"
+                                disabled={loading}
+                                className={`group flex items-center justify-center gap-2 h-11 rounded-xl font-semibold text-white text-sm bg-gradient-to-r from-fuchsia-600 to-violet-600 hover:from-fuchsia-500 hover:to-violet-500 shadow-lg shadow-fuchsia-500/25 hover:shadow-fuchsia-500/40 transition-all duration-300 mt-1 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
                             >
-                                Create account
-                                <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform duration-200" />
+                                {loading ? "Creating Account..." : "Create Account"}
+                                {!loading && <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform duration-200" />}
                             </button>
 
                             <p className="text-center text-xs text-white/25">
