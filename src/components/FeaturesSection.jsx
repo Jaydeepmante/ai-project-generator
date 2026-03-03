@@ -1,5 +1,5 @@
 /**
- * FeaturesSection.jsx — "Why JRI AI Stands Out" section.
+ * FeaturesSection.jsx — "Why Innovexa AI Stands Out" section.
  * 6 feature cards in a responsive grid. Uses lucide-react icons only.
  */
 import { motion } from "framer-motion";
@@ -41,7 +41,7 @@ const FEATURES = [
     {
         icon: RefreshCw,
         title: "Auto-Refine Blueprint",
-        description: "Not happy with the result? Click 'Refine' and JRI AI instantly improves the output with better context.",
+        description: "Not happy with the result? Click 'Refine' and Innovexa AI instantly improves the output with better context.",
         gradient: "from-fuchsia-600/15 to-violet-600/10",
         border: "border-fuchsia-500/25",
         iconColor: "text-fuchsia-400",
@@ -127,7 +127,7 @@ export default function FeaturesSection() {
                     <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-4">
                         Why{" "}
                         <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400 bg-clip-text text-transparent">
-                            JRI AI
+                            Innovexa AI
                         </span>{" "}
                         Stands Out
                     </h2>

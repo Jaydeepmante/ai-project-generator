@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import ProjectDetail from "./pages/ProjectDetail";
+import Features from "./pages/Features";
 
 /* Page transition variants — subtle slide + fade */
 const pageVariants = {
@@ -72,6 +73,7 @@ function AnimatedRoutes() {
       >
         <Routes location={location}>
           <Route path="/" element={<Home />} />
+          <Route path="/features" element={<Features />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
 

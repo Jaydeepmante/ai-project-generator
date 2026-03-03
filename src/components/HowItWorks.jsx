@@ -41,7 +41,7 @@ const STEPS = [
         number: "02",
         title: "AI Architects It",
         description:
-            "JRI AI generates the full tech stack, features list, system architecture, step-by-step build plan, and a starter code outline — in seconds.",
+            "Innovexa AI generates the full tech stack, features list, system architecture, step-by-step build plan, and a starter code outline — in seconds.",
         color: "from-fuchsia-500/20 to-violet-500/10",
         border: "border-fuchsia-500/25",
         iconColor: "text-fuchsia-400",
@@ -93,7 +93,7 @@ export default function HowItWorks() {
                         </span>
                     </h2>
                     <p className="text-white/40 text-base max-w-lg mx-auto">
-                        No setup. No account needed. Just describe — and JRI AI does the rest.
+                        No setup. No account needed. Just describe — and Innovexa AI does the rest.
                     </p>
                 </motion.div>
 

@@ -29,7 +29,7 @@ const TESTIMONIALS = [
         stars: 5,
     },
     {
-        quote: "Finally got a solid project idea for my portfolio that actually sounds professional. Thanks JRI AI — my LinkedIn project section has never looked better!",
+        quote: "Finally got a solid project idea for my portfolio that actually sounds professional. Thanks Innovexa AI — my LinkedIn project section has never looked better!",
         name: "Priya S.",
         role: "3rd Year IT Student",
         initials: "PS",
@@ -77,7 +77,7 @@ export default function Testimonials() {
                         Are Saying
                     </h2>
                     <p className="text-white/40 text-base max-w-lg mx-auto">
-                        JRI AI was built for students and early builders. Here's what they think.
+                        Innovexa AI was built for early builders. Here's what they think.
                     </p>
                 </motion.div>
 

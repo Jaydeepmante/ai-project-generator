@@ -4,7 +4,7 @@ import { Menu, X, Zap, ChevronDown, Sparkles } from "lucide-react";
 
 const navLinks = [
   { label: "Home", to: "/" },
-  { label: "Features", to: "/#features" },
+  { label: "Features", to: "/features" },
   {
     label: "Pricing",
     to: "/#pricing",
@@ -22,7 +22,7 @@ export default function Navbar() {
 
   /* Scroll detection */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -43,23 +43,26 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
           ? "bg-[#0a0a0f]/90 backdrop-blur-md border-b border-white/5 shadow-lg shadow-black/20"
           : "bg-transparent"
-      }`}
+        }`}
     >
       {/* Centered Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20 w-full">
           {/* Left: logo + links */}
           <div className="flex items-center space-x-8 md:space-x-10 shrink-0">
-            <Link to="/" className="flex items-center gap-2 group shrink-0">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/30 group-hover:shadow-violet-500/55 transition-all duration-300">
-                <Zap size={16} className="text-white" fill="white" />
+            <Link to="/" className="flex items-center gap-2.5 group shrink-0">
+              <div className="relative">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-violet-500/20 group-hover:shadow-violet-500/40 group-hover:scale-105 transition-all duration-300">
+                  <Sparkles size={18} className="text-white animate-pulse" fill="white" />
+                </div>
+                {/* Subtle outer glow */}
+                <div className="absolute inset-0 rounded-xl bg-violet-500/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
-              <span className="text-white font-bold text-lg tracking-tight">
-                JRI <span className="text-violet-400 group-hover:text-violet-300 transition-colors duration-200">AI</span>
+              <span className="text-white font-bold text-xl tracking-tight">
+                Innovexa <span className="text-violet-400 group-hover:text-violet-300 transition-colors duration-200">AI</span>
               </span>
             </Link>
 
@@ -73,11 +76,10 @@ export default function Navbar() {
                     <div key={link.label} className="relative" ref={tipRef}>
                       <button
                         onClick={() => setPricingTip((v) => !v)}
-                        className={`flex items-center gap-1 px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
-                          active
+                        className={`flex items-center gap-1 px-4 py-2 text-sm rounded-lg transition-all duration-200 ${active
                             ? "text-violet-300 bg-violet-500/10 shadow-sm shadow-violet-500/10"
                             : "text-white/60 hover:text-purple-300 hover:bg-white/5"
-                        }`}
+                          }`}
                       >
                         {link.label}
                         <ChevronDown
@@ -105,11 +107,10 @@ export default function Navbar() {
                   <Link
                     key={link.label}
                     to={link.to}
-                    className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
-                      active
+                    className={`px-4 py-2 text-sm rounded-lg transition-all duration-200 ${active
                         ? "text-violet-300 bg-violet-500/10 shadow-sm shadow-violet-500/10"
                         : "text-white/60 hover:text-purple-300 hover:bg-white/5"
-                    }`}
+                      }`}
                   >
                     {link.label}
                   </Link>
@@ -158,11 +159,10 @@ export default function Navbar() {
                 key={link.label}
                 to={link.to}
                 onClick={() => setMenuOpen(false)}
-                className={`flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-all duration-200 ${
-                  isActive(link.to)
+                className={`flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-all duration-200 ${isActive(link.to)
                     ? "text-violet-300 bg-violet-500/10"
                     : "text-white/60 hover:text-purple-300 hover:bg-white/5"
-                }`}
+                  }`}
               >
                 {link.label}
                 {link.tooltip && (

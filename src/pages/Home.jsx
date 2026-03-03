@@ -1,5 +1,5 @@
 /**
- * Home.jsx — Full JRI AI landing page.
+ * Home.jsx — Full Innovexa AI landing page.
  *
  * Section scroll order:
  *   1.  Navbar
@@ -7,11 +7,10 @@
  *   3.  Generator         — input + Generate + result card  (primary CTA)
  *   4.  SampleOutputs     — 3 static example blueprints
  *   5.  HowItWorks        — 3-step process
- *   6.  Testimonials      — 3 student reviews + trust badges  [NEW]
- *   7.  FeaturesSection   — 6 feature cards                   [NEW]
- *   8.  DemoSection       — before/after mockup + video stub   [NEW]
- *   9.  FinalCTA          — full-width purple gradient CTA     [NEW]
- *   10. Footer
+ *   6.  Testimonials      — 3 student reviews + trust badges
+ *   7.  DemoSection       — before/after mockup + video stub
+ *   8.  FinalCTA          — full-width purple gradient CTA
+ *   9.  Footer
  */
 import { motion } from "framer-motion";
 import { Sparkles, ArrowRight } from "lucide-react";
@@ -23,7 +22,6 @@ import Generator from "../components/Generator";
 import SampleOutputs from "../components/SampleOutputs";
 import HowItWorks from "../components/HowItWorks";
 import Testimonials from "../components/Testimonials";
-import FeaturesSection from "../components/FeaturesSection";
 import DemoSection from "../components/DemoSection";
 
 /* ─── Thin section divider ─────────────────────────────────── */
@@ -87,7 +85,7 @@ function FinalCTA() {
 
                 <p className="text-white/50 text-base mb-10 leading-relaxed">
                     Unlimited ideas today. Save your projects with a free signup.
-                    Built for students, hackathons &amp; portfolios — by JRI.
+                    Built for developers and visionary builders — by Innovexa.
                 </p>
 
                 {/* CTA buttons */}
@@ -115,7 +113,7 @@ function FinalCTA() {
                 </div>
 
                 <p className="text-white/20 text-xs">
-                    No signup required to try. Create an account to save your blueprints (coming soon).
+                    No signup required to try. Create an account to save your blueprints.
                 </p>
             </motion.div>
         </section>
@@ -131,7 +129,7 @@ export default function Home() {
             {/* 1. Hero */}
             <Hero />
 
-            {/* 2. Generator — primary CTA, flows directly below hero */}
+            {/* 2. Generator — primary CTA */}
             <Generator />
 
             <Divider />
@@ -151,26 +149,21 @@ export default function Home() {
 
             <Divider />
 
-            {/* 6. Feature cards */}
-            <FeaturesSection />
-
-            <Divider />
-
-            {/* 7. Demo / before-after mockup */}
+            {/* 6. Demo / before-after mockup */}
             <DemoSection />
 
             <Divider />
 
-            {/* 8. Final CTA — full-width purple gradient */}
+            {/* 7. Final CTA — full-width purple gradient */}
             <FinalCTA />
 
             {/* Footer */}
             <footer className="py-6 px-6 border-t border-white/5 bg-[#0a0a0f]">
                 <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/20">
-                    <p>© 2026 JRI AI — Built for students &amp; developers.</p>
+                    <p>© 2026 Innovexa AI — Built for developers.</p>
                     <div className="flex items-center gap-5">
                         <Link to="/" className="hover:text-white/50 transition-colors">Home</Link>
-                        <Link to="/#features" className="hover:text-white/50 transition-colors">Features</Link>
+                        <Link to="/features" className="hover:text-white/50 transition-colors">Features</Link>
                         <Link to="/login" className="hover:text-white/50 transition-colors">Login</Link>
                         <Link to="/signup" className="hover:text-white/50 transition-colors">Sign Up</Link>
                         <Link to="/dashboard" className="hover:text-white/50 transition-colors">Dashboard</Link>

@@ -1,5 +1,5 @@
 /**
- * DemoSection.jsx — "Watch JRI AI in Action" section.
+ * DemoSection.jsx — "Watch Innovexa AI in Action" section.
  * Static before/after placeholder showing input → output flow.
  * Real video embed can replace this later.
  */
@@ -37,7 +37,7 @@ export default function DemoSection() {
                     <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-4">
                         Watch{" "}
                         <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400 bg-clip-text text-transparent">
-                            JRI AI
+                            Innovexa AI
                         </span>{" "}
                         in Action
                     </h2>
@@ -62,7 +62,7 @@ export default function DemoSection() {
                             <div className="w-3 h-3 rounded-full bg-green-500/60" />
                         </div>
                         <div className="flex-1 mx-4 h-6 rounded-md bg-white/5 flex items-center px-3">
-                            <span className="text-xs text-white/20">app.jriai.io — generator</span>
+                            <span className="text-xs text-white/20">app.innovexa.ai — generator</span>
                         </div>
                         <span className="text-[10px] text-violet-400/60 font-medium hidden sm:block">LIVE PREVIEW</span>
                     </div>
@@ -91,7 +91,7 @@ export default function DemoSection() {
                         {/* RIGHT — Output side */}
                         <div className="p-6 flex flex-col gap-4">
                             <div className="flex items-center justify-between">
-                                <p className="text-[10px] uppercase tracking-widest text-white/25 font-semibold">JRI AI Blueprint</p>
+                                <p className="text-[10px] uppercase tracking-widest text-white/25 font-semibold">Innovexa AI Blueprint</p>
                                 <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/25 text-emerald-400 text-[10px] font-semibold">Ready</span>
                             </div>
 

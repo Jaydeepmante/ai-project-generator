@@ -1,5 +1,5 @@
 /**
- * Firebase Configuration for JRI AI
+ * Firebase Configuration for Innovexa AI
  * 
  * To get your real credentials:
  * 1. Go to https://console.firebase.google.com/

@@ -72,7 +72,7 @@ export default function Hero() {
                     className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-300 text-xs font-medium mb-7 shadow-lg shadow-violet-500/10"
                 >
                     <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
-                    JRI AI 2.0 — Powered by Google Gemini
+                    Innovexa AI 2.0 — Powered by Google Gemini
                     <Sparkles size={11} />
                 </motion.div>
 

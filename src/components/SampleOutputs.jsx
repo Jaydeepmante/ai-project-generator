@@ -1,5 +1,5 @@
 /**
- * SampleOutputs.jsx — "See What JRI AI Builds For You" section.
+ * SampleOutputs.jsx — "See What Innovexa AI Builds For You" section.
  * 3 static example project cards with tech stack + features.
  */
 import { motion } from "framer-motion";
@@ -82,7 +82,7 @@ export default function SampleOutputs() {
                     <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-4">
                         See What{" "}
                         <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400 bg-clip-text text-transparent">
-                            JRI AI
+                            Innovexa AI
                         </span>{" "}
                         Builds For You
                     </h2>
